@@ -194,7 +194,11 @@ class HttpProtocol(HttpProtocolMixin, SanicProtocol, metaclass=TouchUpMeta):
         if req is not None:
             if ip := req.client_ip:
                 extra["host"] = f"{ip}:{req.port}"
-            extra["request"] = f"{req.method} {req.url}"
+            request_line = f"{req.method} {req.url}"
+            basis = getattr(req.ctx, "_artifact_basis", None)
+            if basis:
+                request_line = f"{request_line} artifact={basis}"
+            extra["request"] = request_line
         access_logger.info("", extra=extra)
 
     def check_timeouts(self):

@@ -64,6 +64,7 @@ from sanic.log import LOGGING_CONFIG_DEFAULTS, error_logger, logger
 from sanic.logging.deprecation import deprecation
 from sanic.logging.setup import setup_logging
 from sanic.middleware import Middleware, MiddlewareLocation
+from sanic.mixins.artifacts import ArtifactMixin
 from sanic.mixins.commands import CommandMixin
 from sanic.mixins.listeners import ListenerEvent
 from sanic.mixins.startup import StartupMixin
@@ -108,6 +109,7 @@ config_type = TypeVar("config_type", bound=Config)
 
 class Sanic(
     Generic[config_type, ctx_type],
+    ArtifactMixin,
     StaticHandleMixin,
     BaseSanic,
     StartupMixin,
@@ -123,6 +125,7 @@ class Sanic(
         "_run_request_middleware",
     )
     __slots__ = (
+        "_artifact_registries",
         "_asgi_app",
         "_asgi_lifespan",
         "_asgi_client",
@@ -294,6 +297,7 @@ class Sanic(
             self.config.INSPECTOR = inspector
 
         # Then we can do the rest
+        self._artifact_registries: dict[str, Any] = {}
         self._asgi_app: ASGIApp | None = None
         self._asgi_lifespan: Lifespan | None = None
         self._asgi_client: Any = None

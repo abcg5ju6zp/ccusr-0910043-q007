@@ -266,10 +266,58 @@ class Forbidden(HTTPException):
     quiet = True
 
 
+class Conflict(HTTPException):
+    """项目内部接口说明。"""
+
+    status_code = 409
+    quiet = True
+
+
+class Gone(HTTPException):
+    """项目内部接口说明。"""
+
+    status_code = 410
+    quiet = True
+
+
+class PreconditionFailed(HTTPException):
+    """项目内部接口说明。"""
+
+    status_code = 412
+    quiet = True
+
+
 class InvalidRangeType(RangeNotSatisfiable):
     """项目内部接口说明。"""
 
-    status_code = 416
+
+class ArtifactError(SanicException):
+    """Base class for immutable artifact publication failures."""
+
+
+class ArtifactNotFound(NotFound):
+    """The requested artifact alias or version is not published."""
+
+
+class ArtifactRevoked(Gone):
+    """The pinned artifact version was withdrawn before the body was sent."""
+
+    quiet = True
+
+
+class ArtifactConflict(Conflict):
+    """An alias or version is already pinned to different content."""
+
+
+class ArtifactCorrupted(ServerError):
+    """Stored bytes do not match the sealed digest or length."""
+
+    quiet = True
+
+
+class ArtifactPreconditionFailed(PreconditionFailed):
+    """If-Match / If-Unmodified-Since does not match the pinned version."""
+
     quiet = True
 
 

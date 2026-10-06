@@ -3,6 +3,7 @@ from types import SimpleNamespace
 from typing_extensions import TypeAlias
 
 from sanic.__version__ import __version__
+from sanic.artifacts import ArtifactRegistry, ArtifactVersion
 from sanic.app import Sanic
 from sanic.blueprints import Blueprint
 from sanic.config import Config
@@ -57,6 +58,9 @@ __all__ = (
     "HTTPResponse",
     "Request",
     "Websocket",
+    # Immutable artifact versions
+    "ArtifactRegistry",
+    "ArtifactVersion",
     # Common types
     "DefaultSanic",
     "DefaultRequest",

@@ -474,6 +474,11 @@ class Http(Stream, metaclass=TouchUpMeta):
         if ip := req.client_ip:
             extra["host"] = f"{ip}:{req.port}"
         extra["request"] = f"{req.method} {req.url}"
+        basis = getattr(req.ctx, "_artifact_basis", None)
+        if basis:
+            # Never log the local filesystem path; the sealed version basis is
+            # the stable identifier for what bytes were served.
+            extra["request"] = f"{extra['request']} artifact={basis}"
         access_logger.info("", extra=extra)
 
     # Request methods
